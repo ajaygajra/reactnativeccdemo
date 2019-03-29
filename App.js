@@ -20,6 +20,7 @@ import {
   decode,
   encode
 } from 'base-64'
+
 if (!global.btoa) {
   global.btoa = encode;
 }
@@ -32,10 +33,7 @@ import {
 } from '@cometchat-pro/chat';
 
 
-// this.DOMParser = require('xmldom').DOMParser;
-this.document = new this.DOMParser().parseFromString("<?xml version='1.0'?>", 'text/xml');
-
-this.strophe=require('/opt/lampp/htdocs/reacyt-native-demo/stropheexample/node_modules/strophe.js/dist/strophe.js').Strophe;
+// this.strophe=require('/opt/lampp/htdocs/reacyt-native-demo/stropheexample/node_modules/strophe.js/dist/strophe.js').Strophe;
 
 // let connection = new strophe.Connection("ws://encke.cometchat-dev.com:80/ws/");
 // connection.connect("[12573e6ce3866]uidd1@encke.cometchat-dev.com/asfasfa", "user", status => {
@@ -53,20 +51,33 @@ const instructions = Platform.select({
     'Double tap R on your keyboard to reload,\n' +
     'Shake or press menu button for dev menu',
 });
-
-CometChat.init("1089f54cd9e81d").then(() => {  
-
+if(!CometChat.isInitialized())
+CometChat.init("6e13b23d7a3").then(() => {
   console.log("intialized");  
-  this.document = new DOMParser().parseFromString("<?xml version='1.0'?>", 'text/xml');
-  
-  
-  CometChat.login('jstestuser1', '2eec670353db7ec021b0bdf0ccc75c0a21b1774c').then(user=>{
-    console.log("helloworld");
-  },error=>{   
-    console.log(JSON.stringify(error));
-    console.log("ashfjkakskfgajksgjfka sfkgasjk gfjasj");
-  })
+  // this.document = new DOMParser().parseFromString("<?xml version='1.0'?>", 'text/xml');  
 });
+
+this.DOMParser = require('xmldom').DOMParser;
+this.document = new this.DOMParser().parseFromString("<?xml version='1.0'?>", 'text/xml');
+
+CometChat.login('superhero1', '3de4f1672b44a43f1593ea03a27e3b3202a3869b').then(user => {
+  console.log(CometChat.getLoggedinUser().then(user => {
+    console.log("say hi I am logged in ", user);
+    
+  }));
+}, error => {
+  console.log(JSON.stringify(error));
+  console.log("ashfjkakskfgajksgjfka sfkgasjk gfjasj");
+})
+
+CometChat.addMessageListener("ASfasfa",new CometChat.MessageListener({
+  onTextMessageReceived: (message) => {
+    CometChat.getLastDeliveredMessageId().then(id=>{
+      console.log({"this is message id":id});
+    })
+    console.log("message received",message);
+  }
+}))
 
 export default class App extends Component {
   render() {
